@@ -6,7 +6,10 @@ on: push
 jobs:
   
   build:
-    
+   
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
     name: Build Image
     runs-on: ubuntu-latest
 
@@ -53,4 +56,12 @@ jobs:
         IMAGE_TAG: app-1.1
       run: |
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Slack Notification
+      uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#test'
+      if: always()
 
