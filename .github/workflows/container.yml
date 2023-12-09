@@ -49,7 +49,7 @@ jobs:
       run: |
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-  # # - name: Debug Image Reference
+    # - name: Debug Image Reference
     #  run: |
     #    echo "Image Reference: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
