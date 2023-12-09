@@ -38,7 +38,7 @@ jobs:
     - name: Install and run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
       with:
-          image-ref: '$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
+          image-ref: "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
