@@ -36,8 +36,16 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
     - name: Install and run Trivy vulnerability scanner
-      run: |
-        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+      with:
+          image-ref: '$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'        
+        
+        #      run: |
+        #docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Push image to Amazon ECR
       env:
