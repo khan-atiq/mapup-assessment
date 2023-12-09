@@ -59,6 +59,21 @@ jobs:
       run: |
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+    - name : Image Scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+         image-ref: '${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}'
+         security-checks: 'vuln,secret,config'
+         format: 'sarif'
+         output: 'trivy-image-results.sarif'
+         severity: 'CRITICAL,HIGH'
+
+    - name: Upload the scan result to github security
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+         sarif_file: 'trivy-image-results.sarif'
+         category: 'image'
+
     - name: Slack Notification
       uses: act10ns/slack@v1
       with:
